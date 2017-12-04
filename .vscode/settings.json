@@ -1,5 +1,12 @@
 {
-  "cSpell.words": [
-    "elazarl"
-  ]
+  "cSpell.ignorePaths": [
+    "**/vscode-extension/**",
+    "**/.git/**",
+    ".gitignore",
+    ".vscode",
+    "typings",
+    "vendor",
+    "**/lib/go-1.6/**"
+  ],
+  "cSpell.language": "en"
 }
