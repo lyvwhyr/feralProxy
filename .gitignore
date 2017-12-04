@@ -13,4 +13,21 @@
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/
 
-./vendor
+pkg/
+bin/
+vendor/
+build/
+logs/*.log
+
+etc/config.yaml
+
+*~
+.*.swp
+
+coverage.out
+.DS_Store
+coverage.html
+profile.cov
+
+# googlecode Package repos
+.hg
