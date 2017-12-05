@@ -18,6 +18,11 @@ func getURLResponse(url string) (*http.Response, error) {
 
 func onRequest(w http.ResponseWriter, r *http.Request) {
 	url := r.URL.Query().Get("url")
+	if url == "" {
+		fmt.Println("url query param missing from url")
+		return
+	}
+
 	resp, err := getURLResponse(url)
 	if err != nil {
 		fmt.Println(err)
@@ -43,7 +48,7 @@ func getRTNews(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responseBodyString, err := ioutil.ReadAll(resp.Body)
+	responseBodyBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -51,12 +56,12 @@ func getRTNews(w http.ResponseWriter, r *http.Request) {
 	defer resp.Body.Close()
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Write(responseBodyString)
+	w.Write(responseBodyBytes)
 }
 
 func main() {
 	http.HandleFunc("/news/rt", getRTNews)
-	// http.HandleFunc("/", onRequest)          // set router
+	http.HandleFunc("/cors/", onRequest)     // set router
 	err := http.ListenAndServe(":8080", nil) // set listen port
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
