@@ -4,9 +4,8 @@
     "**/.git/**",
     ".gitignore",
     ".vscode",
-    "typings",
     "vendor",
-    "**/lib/go-1.6/**"
+    "**/lib/go-1.8/**"
   ],
   "cSpell.language": "en"
 }

@@ -21,22 +21,42 @@ func onRequest(w http.ResponseWriter, r *http.Request) {
 	resp, err := getURLResponse(url)
 	if err != nil {
 		fmt.Println(err)
+		return
 	}
 
 	responseBodyString, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println(err)
+		return
 	}
 	defer resp.Body.Close()
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Write(responseBodyString)
-	w.WriteHeader(200)
+}
 
+func getRTNews(w http.ResponseWriter, r *http.Request) {
+	rtNewsURL := "http://www.rt.com/rss"
+	resp, err := getURLResponse(rtNewsURL)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	responseBodyString, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer resp.Body.Close()
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Write(responseBodyString)
 }
 
 func main() {
-	http.HandleFunc("/", onRequest)          // set router
+	http.HandleFunc("/news/rt", getRTNews)
+	// http.HandleFunc("/", onRequest)          // set router
 	err := http.ListenAndServe(":8080", nil) // set listen port
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
