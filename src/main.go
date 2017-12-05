@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+
+	xj "github.com/basgys/goxml2json"
 )
 
 func getURLResponse(url string) (*http.Response, error) {
@@ -48,15 +50,13 @@ func getRTNews(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responseBodyBytes, err := ioutil.ReadAll(resp.Body)
+	json, err := xj.Convert(resp.Body)
 	if err != nil {
-		fmt.Println(err)
-		return
+		panic("Failed to convert RT rss feed xml body")
 	}
-	defer resp.Body.Close()
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Write(responseBodyBytes)
+	w.Write(json.Bytes())
 }
 
 func main() {

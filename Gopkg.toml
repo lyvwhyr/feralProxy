@@ -19,3 +19,7 @@
 #  name = "github.com/x/y"
 #  version = "2.4.0"
 
+
+[[constraint]]
+  name = "github.com/basgys/goxml2json"
+  version = "1.0.0"
