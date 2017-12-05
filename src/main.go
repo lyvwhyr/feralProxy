@@ -18,7 +18,7 @@ func getURLResponse(url string) (*http.Response, error) {
 	return resp, nil
 }
 
-func onRequest(w http.ResponseWriter, r *http.Request) {
+func onCORSRequest(w http.ResponseWriter, r *http.Request) {
 	url := r.URL.Query().Get("url")
 	if url == "" {
 		fmt.Println("url query param missing from url")
@@ -61,7 +61,7 @@ func getRTNews(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/news/rt", getRTNews)
-	http.HandleFunc("/cors/", onRequest)     // set router
+	http.HandleFunc("/cors/", onCORSRequest) // set router
 	err := http.ListenAndServe(":8080", nil) // set listen port
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
