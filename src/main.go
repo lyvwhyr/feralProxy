@@ -59,7 +59,7 @@ func getRTNews(w http.ResponseWriter, r *http.Request) {
 	w.Write(json.Bytes())
 }
 
-func main() {
+func init() {
 	http.HandleFunc("/news/rt", getRTNews)
 	http.HandleFunc("/cors/", onCORSRequest) // set router
 	err := http.ListenAndServe(":8080", nil) // set listen port
