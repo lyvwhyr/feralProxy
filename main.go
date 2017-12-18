@@ -1,4 +1,4 @@
-package main
+package rtrss
 
 import (
 	"encoding/json"
@@ -7,10 +7,16 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+
+	"google.golang.org/appengine"
+	"google.golang.org/appengine/urlfetch"
 )
 
-func getURLResponse(url string) (*http.Response, error) {
-	resp, err := http.Get(url)
+func getURLResponse(url string, r *http.Request) (*http.Response, error) {
+	ctx := appengine.NewContext(r)
+	client := urlfetch.Client(ctx)
+
+	resp, err := client.Get(url)
 	if err != nil {
 		return nil, err
 	}
@@ -25,7 +31,7 @@ func onCORSRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp, err := getURLResponse(url)
+	resp, err := getURLResponse(url, r)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -55,7 +61,7 @@ type RSSItem struct {
 
 func getRTNews(w http.ResponseWriter, r *http.Request) {
 	rtNewsURL := "http://www.rt.com/rss"
-	resp, err := getURLResponse(rtNewsURL)
+	resp, err := getURLResponse(rtNewsURL, r)
 	if err != nil {
 		log.Println(err)
 		return
@@ -86,14 +92,9 @@ func getRTNews(w http.ResponseWriter, r *http.Request) {
 	w.Write(jsonData)
 }
 
-func main() {
-	http.HandleFunc("/news/rt", getRTNews)
-	http.HandleFunc("/cors/", onCORSRequest) // set router
-	err := http.ListenAndServe(":8080", nil) // set listen port
-	if err != nil {
-		log.Fatal("ListenAndServe: ", err)
-	}
-
+func init() {
+	http.HandleFunc("/titan/news/rt", getRTNews)
+	// http.HandleFunc("/titan/cors/", onCORSRequest) // set router
 }
 
 // <rss xmlns:media="http://search.yahoo.com/mrss/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
